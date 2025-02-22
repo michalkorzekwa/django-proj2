@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 
 class Event(models.Model):
     name = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(max_length=255)
     date = models.DateTimeField()
-    location = models.CharField(max_length=255)
+    location = models.CharField(max_length=350)
     max_participants = models.PositiveIntegerField()
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     

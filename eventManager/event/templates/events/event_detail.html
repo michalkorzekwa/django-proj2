@@ -5,6 +5,7 @@
     <p>{{ event.description }}</p>
     <p><strong>Location:</strong> {{ event.location }}</p>
     <p><strong>Date:</strong> {{ event.date }}</p>
+    <p><strong>Organizer:</strong> {{ event.created_by.username }}</p>
 
     {% if event.max_participants %}
         <p><strong>Participants:</strong> {{ registered_count }} / {{ event.max_participants }}</p>
@@ -21,7 +22,7 @@
             {% else %}
                 <form method="post" action="{% url 'register_event' event.id %}">
                     {% csrf_token %}
-                    <button type="submit">Register</button>
+                    <button type="submit" class="sub">Register</button>
                 </form>
             {% endif %}
         {% endif %}
