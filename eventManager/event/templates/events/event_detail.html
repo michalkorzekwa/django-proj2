@@ -29,4 +29,22 @@
     {% else %}
         <p>You must be logged in to register for events.</p>
     {% endif %}
+    <h3>Komentarze</h3>
+
+    {% for comment in comments %}
+        <div style="border-bottom: 1px solid #ddd; margin-bottom: 10px;">
+            <strong>{{ comment.user.username }}</strong> ({{ comment.created_at|date:"Y-m-d H:i" }})<br>
+            {{ comment.text }}
+        </div>
+    {% empty %}
+        <p>Brak komentarzy.</p>
+    {% endfor %}
+
+    <h4>Dodaj komentarz</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Dodaj</button>
+    </form>
+
 {% endblock %}

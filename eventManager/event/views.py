@@ -4,6 +4,7 @@ from .models import Event, Registration
 from .forms import EventForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from .forms import CommentForm
 
 @login_required
 def event_list(request):
@@ -13,18 +14,31 @@ def event_list(request):
 @login_required
 def event_detail(request, event_id):
     event = get_object_or_404(Event, id=event_id)
-
     registered_count = Registration.objects.filter(event=event).count()
-
     max_participants = event.max_participants
-
     is_registered = Registration.objects.filter(event=event, user=request.user).exists()
+
+    from .forms import CommentForm
+    comments = event.comments.all().order_by('-created_at')
+
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.event = event
+            comment.user = request.user
+            comment.save()
+            return redirect('event_detail', event_id=event.id)
+    else:
+        comment_form = CommentForm()
 
     return render(request, 'events/event_detail.html', {
         'event': event,
         'registered_count': registered_count,
         'max_participants': max_participants,
-        'is_registered': is_registered, 
+        'is_registered': is_registered,
+        'comments': comments,
+        'comment_form': comment_form,
     })
 
 
